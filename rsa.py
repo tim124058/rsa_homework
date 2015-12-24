@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import random
+from tkinter import *
 
 #用Square-and-Multiply計算(a**b)%m
 def SandM(a,b,m):
@@ -12,11 +13,13 @@ def SandM(a,b,m):
 
 #產生n bit的奇數
 def rnd_n_bit(n):
-    a="1"
+    a = 1
     for i in range(n-2):
-        a+=str(random.randint(0,1))
-    a+="1"
-    return int(a,2)
+        a*=2
+        if random.randint(0,1)==1:
+            a+=1
+    a = a*2+1
+    return a
 
 #測試是否不是質數，n為要測試的數，t為測試的次數
 def MillerRabin(n,t):
@@ -83,8 +86,8 @@ while True:
 #產生p,q
 print("正在產生p,q....")
 while True:
-    p = PrimeGenerator(bit//2,4)
-    q = PrimeGenerator(bit//2,4)
+    p = PrimeGenerator(bit//2,30)
+    q = PrimeGenerator(bit//2,30)
     n = p * q
     phi_n = (p-1) * (q-1)
     e = 65537
@@ -102,12 +105,46 @@ print("e = ",e)
 print("d = ",d)
 
 
-plaintext = int(input("\n\n請輸入明文 : "))
 
-cipher = SandM(plaintext,e,n)
-print("Ciphertext : ",cipher)
+while True:
+    plaintext = int(input("\n\n請輸入明文 : "))
+
+    cipher = SandM(plaintext,e,n)
+    print("Ciphertext : ",cipher)
 
 
-plain = CRT(cipher,p,q,d,n,Cp,Cq)
-print("Plaintext : ",plain)
+    plain = CRT(cipher,p,q,d,n,Cp,Cq)
+    print("Plaintext : ",plain)
+
+
+
+
+
+
+#############################
+##      ____ _   _ ___      #
+##     / ___| | | |_ _|     #
+##    | |  _| | | || |      #
+##    | |_| | |_| || |      #
+##     \____|\___/|___|     #
+##                          #
+#############################
+
+#root = Tk()
+#root.title("RSA")
+
+#Bit_Label = Lable(root,width=10,height=5,text="請輸入RSA bit數(n的bit數) : ")
+#Bit_Label.grid(row=0,column=0)
+#bit=IntVar()
+#Bit_Entry = Entry(root,width=20,font=("Purisa", 10),textvariable=bit)
+#Bit_Entry.focus_set()
+#Bit_Entry.grid(row=0,column=1,columnspan=6,padx=(10,40))
+
+#Generate_button = Button(root,text ="產生加密資料" )
+
+
+
+
+#root.mainloop()
+
 
