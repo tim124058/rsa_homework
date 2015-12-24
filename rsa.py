@@ -160,6 +160,12 @@ def GenerateData():
     Cp = SandM(q,p-2,p) * q
     Cq = SandM(p,q-2,q) * p
     Message.set("資料產生完成！")
+    print("p =",p)
+    print("q =",q)
+    print("n =",n)
+    print("phi_n =",phi_n)
+    print("e =",e)
+    print("d =",d)
 
 
 
