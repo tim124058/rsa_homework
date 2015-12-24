@@ -70,81 +70,81 @@ def CRT(x,p,q,d,n,Cp,Cq):
     return (Cp*Yp+Cq*Yq) % n
 
 
-#輸入bit
-while True:
-    bit = input("請輸入rsa的bit數：")
-    try:
-        bit = int(bit)
-        if(bit%256 == 0):
-            print("輸入成功....\n")
-            break
-        else:
-            print("請輸入256的倍數!\n")
-    except ValueError:
-        print("只能輸入數字！請重新輸入\n")
+##輸入bit
+#while True:
+    #bit = input("請輸入rsa的bit數：")
+    #try:
+        #bit = int(bit)
+        #if(bit%256 == 0):
+            #print("輸入成功....\n")
+            #break
+        #else:
+            #print("請輸入256的倍數!\n")
+    #except ValueError:
+        #print("只能輸入數字！請重新輸入\n")
 
-#產生p,q
-print("正在產生p,q....")
-while True:
-    p = PrimeGenerator(bit//2,30)
-    q = PrimeGenerator(bit//2,30)
-    n = p * q
-    phi_n = (p-1) * (q-1)
-    e = 65537
-    if phi_n % e != 0:
-        d = modInv(e,phi_n) 
-        break
+##產生p,q
+#print("正在產生p,q....")
+#while True:
+    #p = PrimeGenerator(bit//2,30)
+    #q = PrimeGenerator(bit//2,30)
+    #n = p * q
+    #phi_n = (p-1) * (q-1)
+    #e = 65537
+    #if phi_n % e != 0:
+        #d = modInv(e,phi_n) 
+        #break
 
-Cp = SandM(q,p-2,p) * q
-Cq = SandM(p,q-2,q) * p
-print("p = ",p)
-print("q = ",q)
-print("n = ",n)
-print("phi_n = ",phi_n)
-print("e = ",e)
-print("d = ",d)
-
-
-
-while True:
-    plaintext = int(input("\n\n請輸入明文 : "))
-
-    cipher = SandM(plaintext,e,n)
-    print("Ciphertext : ",cipher)
+#Cp = SandM(q,p-2,p) * q
+#Cq = SandM(p,q-2,q) * p
+#print("p = ",p)
+#print("q = ",q)
+#print("n = ",n)
+#print("phi_n = ",phi_n)
+#print("e = ",e)
+#print("d = ",d)
 
 
-    plain = CRT(cipher,p,q,d,n,Cp,Cq)
-    print("Plaintext : ",plain)
+
+#while True:
+    #plaintext = int(input("\n\n請輸入明文 : "))
+
+    #cipher = SandM(plaintext,e,n)
+    #print("Ciphertext : ",cipher)
 
 
+    #plain = CRT(cipher,p,q,d,n,Cp,Cq)
+    #print("Plaintext : ",plain)
 
 
 
 
-#############################
-##      ____ _   _ ___      #
-##     / ___| | | |_ _|     #
-##    | |  _| | | || |      #
-##    | |_| | |_| || |      #
-##     \____|\___/|___|     #
-##                          #
-#############################
-
-#root = Tk()
-#root.title("RSA")
-
-#Bit_Label = Lable(root,width=10,height=5,text="請輸入RSA bit數(n的bit數) : ")
-#Bit_Label.grid(row=0,column=0)
-#bit=IntVar()
-#Bit_Entry = Entry(root,width=20,font=("Purisa", 10),textvariable=bit)
-#Bit_Entry.focus_set()
-#Bit_Entry.grid(row=0,column=1,columnspan=6,padx=(10,40))
-
-#Generate_button = Button(root,text ="產生加密資料" )
 
 
+############################
+#      ____ _   _ ___      #
+#     / ___| | | |_ _|     #
+#    | |  _| | | || |      #
+#    | |_| | |_| || |      #
+#     \____|\___/|___|     #
+#                          #
+############################
+
+root = Tk()
+root.title("RSA")
+
+Bit_Label = Lable(root,width=10,height=5,text="請輸入RSA bit數(n的bit數) : ")
+Bit_Label.grid(row=0,column=0)
+bit=IntVar()
+Bit_Entry = Entry(root,width=20,font=("Purisa", 10),textvariable=bit)
+Bit_Entry.focus_set()
+Bit_Entry.grid(row=0,column=1,columnspan=6,padx=(10,40))
+
+Generate_button = Button(root,text ="產生加密資料" )
 
 
-#root.mainloop()
+
+
+root.mainloop()
 
 
