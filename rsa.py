@@ -13,13 +13,13 @@ def SandM(a,b,m):
 
 #產生n bit的奇數
 def rnd_n_bit(n):
-    a = 1
+    result = 1
     for i in range(n-2):
-        a*=2
+        result*=2
         if random.randint(0,1)==1:
-            a+=1
-    a = a*2+1
-    return a
+            result+=1
+    result = result*2+1
+    return result
 
 #測試是否不是質數，n為要測試的數，t為測試的次數
 def MillerRabin(n,t):
@@ -163,6 +163,13 @@ def GenerateData():
     PL.set(p);QL.set(q);NL.set(n);Phi_nL.set(phi_n);EL.set(e);DL.set(d);
     print("p =",p); print("q =",q); print("n =",n); print("phi_n =",phi_n); print("e =",e); print("d =",d);
 
+def EncodeMethod():
+    print(PL)
+    pass
+
+def DecodeMethod():
+    print(QL)
+    pass
 
 
 root = Tk()
@@ -222,17 +229,21 @@ show_D_Entry.grid(row=6,column=1,columnspan=9)
 
 PlainL= IntVar()
 Plain_Label = Label(root,width=10,text="PlainText = ")
-Plain_Label.grid(row=7,column=0,pady=(20,20))
+Plain_Label.grid(row=7,column=0,pady=(50,10))
 show_Plain_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=PlainL)
-show_Plain_Entry.grid(row=7,column=1,columnspan=9)
+show_Plain_Entry.grid(row=7,column=1,columnspan=9,pady=(50,10))
 
+Encode_Button = Button(root,height=3,width=10,font=("Purisa",20),text = "加密",command=EncodeMethod)
+Encode_Button.grid(row=8,column=2)
+
+Decode_Button = Button(root,height=3,width=10,font=("Purisa",20),text = "解密",command=DecodeMethod)
+Decode_Button.grid(row=8,column=4)
 
 CipherL = IntVar()
 Cipher_Label = Label(root,width=10,text="CipherText = ")
 Cipher_Label.grid(row=9,column=0)
 show_Cipher_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=CipherL)
 show_Cipher_Entry.grid(row=9,column=1,columnspan=9)
-
 
 root.mainloop()
 
