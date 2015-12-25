@@ -70,55 +70,6 @@ def CRT(x,p,q,d,n,Cp,Cq):
     return (Cp*Yp+Cq*Yq) % n
 
 
-##輸入bit
-#while True:
-    #bit = input("請輸入rsa的bit數：")
-    #try:
-        #bit = int(bit)
-        #if(bit%256 == 0):
-            #print("輸入成功....\n")
-            #break
-        #else:
-            #print("請輸入256的倍數!\n")
-    #except ValueError:
-        #print("只能輸入數字！請重新輸入\n")
-
-##產生p,q
-#print("正在產生p,q....")
-#while True:
-    #p = PrimeGenerator(bit//2,30)
-    #q = PrimeGenerator(bit//2,30)
-    #n = p * q
-    #phi_n = (p-1) * (q-1)
-    #e = 65537
-    #if phi_n % e != 0:
-        #d = modInv(e,phi_n) 
-        #break
-
-#Cp = SandM(q,p-2,p) * q
-#Cq = SandM(p,q-2,q) * p
-#print("p = ",p)
-#print("q = ",q)
-#print("n = ",n)
-#print("phi_n = ",phi_n)
-#print("e = ",e)
-#print("d = ",d)
-
-
-
-#while True:
-    #plaintext = int(input("\n\n請輸入明文 : "))
-
-    #cipher = SandM(plaintext,e,n)
-    #print("Ciphertext : ",cipher)
-
-
-    #plain = CRT(cipher,p,q,d,n,Cp,Cq)
-    #print("Plaintext : ",plain)
-
-
-
-
 
 
 ############################
@@ -131,120 +82,160 @@ def CRT(x,p,q,d,n,Cp,Cq):
 ############################
 
 
-def GenerateData():
-    bit = Bit_Entry.get()
-    try:
-        bit = int(bit)
-        if(bit%256 == 0):
-            Message.set("輸入成功....")
-        else:
-            Message.set("請輸入256的倍數!")
+from time import sleep
+class RSA_GUI(Frame):
+    #按下產生加密資料按鈕(Generate_button)後，產生q,p等加解密所需資料
+    def GenerateData(self):
+        self.PL.set(0);self.QL.set(0);self.NL.set(0);self.Phi_nL.set(0);self.EL.set(0);self.DL.set(0);self.PlainL.set(0);self.CipherL.set(0)
+        self.bit = self.Bit_Entry.get()
+        try:
+            self.bit = int(self.bit)
+            if(self.bit%256 != 0):
+                self.Message.set("請輸入256的倍數!")
+                return 
+        except ValueError:
+            self.Message.set("只能輸入數字！請重新輸入")
             return 
-    except ValueError:
-        Message.set("只能輸入數字！請重新輸入")
-        return 
 
-    #輸入完成，開始產生p,q
-    Message.set("正在產生p,q....")
-    print("正在產生p,q....")
-    while True:
-        p = PrimeGenerator(bit//2,30)
-        q = PrimeGenerator(bit//2,30)
-        n = p * q
-        phi_n = (p-1) * (q-1)
-        e = 65537
-        if phi_n % e != 0:
-            d = modInv(e,phi_n) 
-            break
+        #輸入完成，開始產生p,q
+        self.Message.set("正在產生p,q....")
+        self.update()  
+        print("正在產生p,q....")
+        while True:
+            self.p = PrimeGenerator(self.bit//2,30)
+            self.q = PrimeGenerator(self.bit//2,30)
+            self.n = self.p * self.q
+            self.phi_n = (self.p-1) * (self.q-1)
+            self.e = 65537
+            if (self.phi_n % self.e != 0) and (self.p != self.q):
+                self.d = modInv(self.e,self.phi_n) 
+                break
 
-    Cp = SandM(q,p-2,p) * q
-    Cq = SandM(p,q-2,q) * p
-    Message.set("資料產生完成！")
-    PL.set(p);QL.set(q);NL.set(n);Phi_nL.set(phi_n);EL.set(e);DL.set(d);
-    print("p =",p); print("q =",q); print("n =",n); print("phi_n =",phi_n); print("e =",e); print("d =",d);
+        self.Cp = SandM(self.q,self.p-2,self.p) * self.q
+        self.Cq = SandM(self.p,self.q-2,self.q) * self.p
+        self.Message.set("資料產生完成！")
+        self.PL.set(self.p);self.QL.set(self.q);self.NL.set(self.n);self.Phi_nL.set(self.phi_n);self.EL.set(self.e);self.DL.set(self.d)
+        print("p =",self.p); print("q =",self.q); print("n =",self.n); print("phi_n =",self.phi_n); print("e =",self.e); print("d =",self.d)
 
-def EncodeMethod():
-    print(PL)
-    pass
+    #按下加密(Encode_Button)後，開始對plaintext加密
+    def EncodeMethod(self):
+        plaintext = self.show_Plain_Entry.get()
+        try:
+            plaintext = int(plaintext)
+        except ValueError:
+            self.Message.set("只能輸入數字！請重新輸入")
+            return 
 
-def DecodeMethod():
-    print(QL)
-    pass
+        ciphertext = SandM(plaintext,self.e,self.n)
+        self.Message.set("加密完成！")
+        self.CipherL.set(ciphertext)
+        print("Ciphertext : ",ciphertext)
+
+    #按下解密(Decode_Button)後，開始對ciphertext解密
+    def DecodeMethod(self):
+        ciphertext = self.show_Cipher_Entry.get()
+        try:
+            ciphertext = int(ciphertext)
+        except ValueError:
+            self.Message.set("只能輸入數字！請重新輸入")
+            return 
+
+        plaintext = CRT(ciphertext,self.p,self.q,self.d,self.n,self.Cp,self.Cq)
+        self.Message.set("解密完成！")
+        self.PlainL.set(plaintext)
+        print("Plaintext : ",plaintext)
+
+    #初始化變數
+    def __init__(self,master=None):
+        self.bit=1024
+        self.p=0;self.q=0;self.n=0;self.phi_n=0;self.e=65537;self.d=0;
+        self.Cp=0;self.Cq=0;
+        Frame.__init__(self,master)
+        self.grid()
+        self.Message = StringVar()
+        self.PL = IntVar()
+        self.QL = IntVar()
+        self.NL = IntVar()
+        self.Phi_nL = IntVar()
+        self.EL = IntVar()
+        self.DL = IntVar()
+        self.PlainL= IntVar()
+        self.CipherL = IntVar()
+        self.createWidgets()
+
+    #新增各種圖形物件
+    def createWidgets(self):
+        #第一排： Label Entry Button
+        self.Bit_Label = Label(self,width=20,height=5,text="請輸入RSA bit數(n的bit數) : ")
+        self.Bit_Label.grid(row=0,column=0)
+        self.Bit_Entry = Entry(self,width=20,font=("Purisa", 10))
+        self.Bit_Entry.focus_set()
+        self.Bit_Entry.grid(row=0,column=1,padx=(10,10))
+        self.Generate_button = Button(self,text ="產生加密資料",command = self.GenerateData)
+        self.Generate_button.grid(row=0,column=2)
+
+        #最後一排：顯示一些訊息
+        self.Message_Label = Label(self,width=10,height=5,font=("Purisa",30),text = "Message : ")
+        self.Message_Label.grid(row=10,column=0)
+        self.showMessage_Label = Label(self,width=40,height=5,font=("Purisa",30),textvariable=self.Message)
+        self.showMessage_Label.grid(row=10,column=1,columnspan=9)
+
+        #顯示加解密需要的資料p, q, n, phi_n, e, d
+        self.P_Label = Label(self,width=10,text="p = ")
+        self.P_Label.grid(row=1,column=0)
+        self.show_P_Entry = Entry(self,width=100,font=("Purisa",10),textvariable=self.PL)
+        self.show_P_Entry.grid(row=1,column=1,columnspan=9)
+
+        self.Q_Label = Label(self,width=10,text="q = ")
+        self.Q_Label.grid(row=2,column=0)
+        self.show_Q_Entry = Entry(self,width=100,font=("Purisa",10),textvariable=self.QL)
+        self.show_Q_Entry.grid(row=2,column=1,columnspan=9)
+
+        self.N_Label = Label(self,width=10,text="n = ")
+        self.N_Label.grid(row=3,column=0)
+        self.show_N_Entry = Entry(self,width=100,font=("Purisa",10),textvariable=self.NL)
+        self.show_N_Entry.grid(row=3,column=1,columnspan=9)
+
+        self.Phi_n_Label = Label(self,width=10,text="phi_n = ")
+        self.Phi_n_Label.grid(row=4,column=0)
+        self.show_Phin_Entry = Entry(self,width=100,font=("Purisa",10),textvariable=self.Phi_nL)
+        self.show_Phin_Entry.grid(row=4,column=1,columnspan=9)
+
+        self.E_Label = Label(self,width=10,text="e = ")
+        self.E_Label.grid(row=5,column=0)
+        self.show_E_Entry = Entry(self,width=100,font=("Purisa",10),textvariable=self.EL)
+        self.show_E_Entry.grid(row=5,column=1,columnspan=9)
+
+        self.D_Label = Label(self,width=10,text="d = ")
+        self.D_Label.grid(row=6,column=0)
+        self.show_D_Entry = Entry(self,width=100,font=("Purisa",10),textvariable=self.DL)
+        self.show_D_Entry.grid(row=6,column=1,columnspan=9)
 
 
-root = Tk()
-root.title("RSA")
+        #輸入明文或顯示解密後的明文
+        self.Plain_Label = Label(self,width=10,text="PlainText = ")
+        self.Plain_Label.grid(row=7,column=0,pady=(50,10))
+        self.show_Plain_Entry = Entry(self,width=100,font=("Purisa",10),textvariable=self.PlainL)
+        self.show_Plain_Entry.grid(row=7,column=1,columnspan=9,pady=(50,10))
 
-Bit_Label = Label(root,width=20,height=5,text="請輸入RSA bit數(n的bit數) : ")
-Bit_Label.grid(row=0,column=0,columnspan=1)
-Bit_Entry = Entry(root,width=20,font=("Purisa", 10))
-Bit_Entry.focus_set()
-Bit_Entry.grid(row=0,column=1,padx=(10,10))
+        #輸入明文後，按的加密按鈕
+        self.Encode_Button = Button(self,height=3,width=10,font=("Purisa",20),text = "加密",command = self.EncodeMethod)
+        self.Encode_Button.grid(row=8,column=2)
+        #輸入密文後，按的解密按鈕
+        self.Decode_Button = Button(self,height=3,width=10,font=("Purisa",20),text = "解密",command = self.DecodeMethod)
+        self.Decode_Button.grid(row=8,column=4)
 
-Generate_button = Button(root,text ="產生加密資料",command = GenerateData )
-Generate_button.grid(row=0,column=2)
-
-Message_Label = Label(root,width=10,height=5,font=("Purisa",30),text = "Message : ")
-Message_Label.grid(row=10,column=0)
-Message = StringVar()
-showMessage_Label = Label(root,width=40,height=5,font=("Purisa",30),textvariable=Message)
-showMessage_Label.grid(row=10,column=1,columnspan=9)
-
-PL = IntVar()
-P_Label = Label(root,width=10,text="p = ")
-P_Label.grid(row=1,column=0)
-show_P_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=PL)
-show_P_Entry.grid(row=1,column=1,columnspan=9)
-
-QL = IntVar()
-Q_Label = Label(root,width=10,text="q = ")
-Q_Label.grid(row=2,column=0)
-show_Q_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=QL)
-show_Q_Entry.grid(row=2,column=1,columnspan=9)
-
-NL = IntVar()
-N_Label = Label(root,width=10,text="n = ")
-N_Label.grid(row=3,column=0)
-show_N_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=NL)
-show_N_Entry.grid(row=3,column=1,columnspan=9)
-
-Phi_nL = IntVar()
-Phi_n_Label = Label(root,width=10,text="phi_n = ")
-Phi_n_Label.grid(row=4,column=0)
-show_Phin_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=Phi_nL)
-show_Phin_Entry.grid(row=4,column=1,columnspan=9)
-
-EL = IntVar()
-E_Label = Label(root,width=10,text="e = ")
-E_Label.grid(row=5,column=0)
-show_E_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=EL)
-show_E_Entry.grid(row=5,column=1,columnspan=9)
-
-DL = IntVar()
-D_Label = Label(root,width=10,text="d = ")
-D_Label.grid(row=6,column=0)
-show_D_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=DL)
-show_D_Entry.grid(row=6,column=1,columnspan=9)
+        #輸入明文或顯示解密後的明文
+        self.Cipher_Label = Label(self,width=10,text="CipherText = ")
+        self.Cipher_Label.grid(row=9,column=0)
+        self.show_Cipher_Entry = Entry(self,width=100,font=("Purisa",10),textvariable=self.CipherL)
+        self.show_Cipher_Entry.grid(row=9,column=1,columnspan=9)
 
 
-PlainL= IntVar()
-Plain_Label = Label(root,width=10,text="PlainText = ")
-Plain_Label.grid(row=7,column=0,pady=(50,10))
-show_Plain_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=PlainL)
-show_Plain_Entry.grid(row=7,column=1,columnspan=9,pady=(50,10))
 
-Encode_Button = Button(root,height=3,width=10,font=("Purisa",20),text = "加密",command=EncodeMethod)
-Encode_Button.grid(row=8,column=2)
-
-Decode_Button = Button(root,height=3,width=10,font=("Purisa",20),text = "解密",command=DecodeMethod)
-Decode_Button.grid(row=8,column=4)
-
-CipherL = IntVar()
-Cipher_Label = Label(root,width=10,text="CipherText = ")
-Cipher_Label.grid(row=9,column=0)
-show_Cipher_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=CipherL)
-show_Cipher_Entry.grid(row=9,column=1,columnspan=9)
-
-root.mainloop()
+if __name__ == '__main__':
+    root = Tk()
+    app = RSA_GUI(master=root)
+    app.mainloop()
 
 
