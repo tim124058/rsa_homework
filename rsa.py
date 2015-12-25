@@ -177,9 +177,9 @@ class RSA_GUI(Frame):
         self.Bit_Label.grid(row=0,column=0)
         self.Bit_Entry = Entry(self,width=20,font=("Purisa", 10))
         self.Bit_Entry.focus_set()
-        self.Bit_Entry.grid(row=0,column=1,padx=(10,10))
+        self.Bit_Entry.grid(row=0,column=2,padx=(10,10))
         self.Generate_button = Button(self,text ="產生加密資料",command = self.GenerateData)
-        self.Generate_button.grid(row=0,column=2)
+        self.Generate_button.grid(row=0,column=4)
 
         #最後一排：顯示一些訊息
         self.Message_Label = Label(self,width=10,height=5,font=("Purisa",30),text = "Message : ")
@@ -242,6 +242,7 @@ class RSA_GUI(Frame):
 
 if __name__ == '__main__':
     root = Tk()
+    root.title("RSA")
     app = RSA_GUI(master=root)
     app.mainloop()
 
