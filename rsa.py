@@ -119,6 +119,10 @@ class RSA_GUI(Frame):
 
     #按下加密(Encode_Button)後，開始對plaintext加密
     def EncodeMethod(self):
+        if (self.n == 0):
+            self.Message.set("請先產生資料！")
+            return
+
         plaintext = self.show_Plain_Entry.get()
         try:
             plaintext = int(plaintext)
@@ -133,6 +137,9 @@ class RSA_GUI(Frame):
 
     #按下解密(Decode_Button)後，開始對ciphertext解密
     def DecodeMethod(self):
+        if (self.n == 0):
+            self.Message.set("請先產生資料！")
+            return
         ciphertext = self.show_Cipher_Entry.get()
         try:
             ciphertext = int(ciphertext)
@@ -219,11 +226,11 @@ class RSA_GUI(Frame):
         self.show_Plain_Entry.grid(row=7,column=1,columnspan=9,pady=(50,10))
 
         #輸入明文後，按的加密按鈕
-        self.Encode_Button = Button(self,height=3,width=10,font=("Purisa",20),text = "加密",command = self.EncodeMethod)
-        self.Encode_Button.grid(row=8,column=2)
+        self.Encode_Button = Button(self,width=10,font=("Purisa",20),text = "加密",command = self.EncodeMethod)
+        self.Encode_Button.grid(row=8,column=2,pady=(20,20))
         #輸入密文後，按的解密按鈕
-        self.Decode_Button = Button(self,height=3,width=10,font=("Purisa",20),text = "解密",command = self.DecodeMethod)
-        self.Decode_Button.grid(row=8,column=4)
+        self.Decode_Button = Button(self,width=10,font=("Purisa",20),text = "解密",command = self.DecodeMethod)
+        self.Decode_Button.grid(row=8,column=4,pady=(20,20))
 
         #輸入明文或顯示解密後的明文
         self.Cipher_Label = Label(self,width=10,text="CipherText = ")
