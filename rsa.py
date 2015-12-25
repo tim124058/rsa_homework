@@ -160,12 +160,8 @@ def GenerateData():
     Cp = SandM(q,p-2,p) * q
     Cq = SandM(p,q-2,q) * p
     Message.set("資料產生完成！")
-    print("p =",p)
-    print("q =",q)
-    print("n =",n)
-    print("phi_n =",phi_n)
-    print("e =",e)
-    print("d =",d)
+    PL.set(p);QL.set(q);NL.set(n);Phi_nL.set(phi_n);EL.set(e);DL.set(d);
+    print("p =",p); print("q =",q); print("n =",n); print("phi_n =",phi_n); print("e =",e); print("d =",d);
 
 
 
@@ -173,7 +169,7 @@ root = Tk()
 root.title("RSA")
 
 Bit_Label = Label(root,width=20,height=5,text="請輸入RSA bit數(n的bit數) : ")
-Bit_Label.grid(row=0,column=0)
+Bit_Label.grid(row=0,column=0,columnspan=1)
 Bit_Entry = Entry(root,width=20,font=("Purisa", 10))
 Bit_Entry.focus_set()
 Bit_Entry.grid(row=0,column=1,padx=(10,10))
@@ -181,14 +177,61 @@ Bit_Entry.grid(row=0,column=1,padx=(10,10))
 Generate_button = Button(root,text ="產生加密資料",command = GenerateData )
 Generate_button.grid(row=0,column=2)
 
-
-
-Message_Label = Label(root,width=15,height=10,font=("Purisa",30),text = "Message : ")
-Message_Label.grid(row=6,column=0)
+Message_Label = Label(root,width=10,height=5,font=("Purisa",30),text = "Message : ")
+Message_Label.grid(row=10,column=0)
 Message = StringVar()
-showMessage_Label = Label(root,width=30,height=10,font=("Purisa",30),textvariable=Message)
-showMessage_Label.grid(row=6,column=1,columnspan=3)
+showMessage_Label = Label(root,width=40,height=5,font=("Purisa",30),textvariable=Message)
+showMessage_Label.grid(row=10,column=1,columnspan=9)
 
+PL = IntVar()
+P_Label = Label(root,width=10,text="p = ")
+P_Label.grid(row=1,column=0)
+show_P_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=PL)
+show_P_Entry.grid(row=1,column=1,columnspan=9)
+
+QL = IntVar()
+Q_Label = Label(root,width=10,text="q = ")
+Q_Label.grid(row=2,column=0)
+show_Q_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=QL)
+show_Q_Entry.grid(row=2,column=1,columnspan=9)
+
+NL = IntVar()
+N_Label = Label(root,width=10,text="n = ")
+N_Label.grid(row=3,column=0)
+show_N_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=NL)
+show_N_Entry.grid(row=3,column=1,columnspan=9)
+
+Phi_nL = IntVar()
+Phi_n_Label = Label(root,width=10,text="phi_n = ")
+Phi_n_Label.grid(row=4,column=0)
+show_Phin_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=Phi_nL)
+show_Phin_Entry.grid(row=4,column=1,columnspan=9)
+
+EL = IntVar()
+E_Label = Label(root,width=10,text="e = ")
+E_Label.grid(row=5,column=0)
+show_E_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=EL)
+show_E_Entry.grid(row=5,column=1,columnspan=9)
+
+DL = IntVar()
+D_Label = Label(root,width=10,text="d = ")
+D_Label.grid(row=6,column=0)
+show_D_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=DL)
+show_D_Entry.grid(row=6,column=1,columnspan=9)
+
+
+PlainL= IntVar()
+Plain_Label = Label(root,width=10,text="PlainText = ")
+Plain_Label.grid(row=7,column=0,pady=(20,20))
+show_Plain_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=PlainL)
+show_Plain_Entry.grid(row=7,column=1,columnspan=9)
+
+
+CipherL = IntVar()
+Cipher_Label = Label(root,width=10,text="CipherText = ")
+Cipher_Label.grid(row=9,column=0)
+show_Cipher_Entry = Entry(root,width=100,font=("Purisa",10),textvariable=CipherL)
+show_Cipher_Entry.grid(row=9,column=1,columnspan=9)
 
 
 root.mainloop()
